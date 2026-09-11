@@ -1,0 +1,116 @@
+/* =========================================================
+   ADVANCE.CSS — notification UI + micro-interaction polish.
+   Kept separate from style.css so the base theme stays untouched;
+   reuses the same design tokens (--gold, --surface, --radius, --ease)
+   already defined there so everything matches exactly.
+   ========================================================= */
+
+/* ---------- sound mute toggle (topbar) ---------- */
+#soundToggleBtn.is-muted{ color: var(--text-faint); }
+#soundToggleBtn{ font-size:17px; }
+
+/* sound toggle row inside the Notifications settings card (js/push.js) */
+.push-primer-sound-row{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:14px; padding-top:14px; border-top:1px solid rgba(217, 46, 36,.16);
+  font-size:13.5px; color:#EDF1F7;
+}
+.push-primer-sound-toggle{
+  width:42px; height:24px; border-radius:999px; border:none; padding:0;
+  background: rgba(255,255,255,.14); position:relative; cursor:pointer;
+  transition: background .2s ease;
+}
+.push-primer-sound-toggle span{
+  position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%;
+  background:#EDF1F7; transition: transform .2s cubic-bezier(.3,.7,.4,1.4);
+}
+.push-primer-sound-toggle.is-on{ background: linear-gradient(135deg,#FF6A4D,#D92E24); }
+.push-primer-sound-toggle.is-on span{ transform: translateX(18px); background:#FFFFFF; }
+
+/* ---------- press ripple (buttons, dish cards, steppers) ---------- */
+.ui-ripple-host{ position:relative; overflow:hidden; }
+.ui-ripple{
+  position:absolute; border-radius:50%; pointer-events:none;
+  background: radial-gradient(circle, rgba(217, 46, 36,.35), rgba(217, 46, 36,0) 70%);
+  transform: scale(0);
+  animation: uiRippleOut .5s var(--ease) forwards;
+  z-index:1;
+}
+@keyframes uiRippleOut{
+  0%{ transform:scale(0); opacity:.9; }
+  100%{ transform:scale(1); opacity:0; }
+}
+
+/* ---------- fly-to-cart flourish ---------- */
+.ui-fly-dot{
+  position:fixed; z-index:9997; pointer-events:none;
+  font-size:20px; line-height:1;
+  transition: transform .55s cubic-bezier(.3,.7,.4,1), opacity .55s ease;
+  transform: translate(0,0) scale(1);
+  will-change: transform, opacity;
+}
+
+/* ---------- skeleton loaders ---------- */
+.skeleton-wrap{ display:flex; flex-direction:column; gap:12px; }
+.skeleton-card{
+  border:1px solid var(--border-soft); border-radius: var(--radius-lg);
+  padding:16px; background: var(--surface-2);
+}
+.skeleton-line, .skeleton-bar{
+  border-radius:6px;
+  background: linear-gradient(90deg, var(--surface-3) 25%, var(--surface-2) 37%, var(--surface-3) 63%);
+  background-size: 400% 100%;
+  animation: skeletonShimmer 1.4s ease infinite;
+}
+.skeleton-line--title{ width:55%; height:14px; margin-bottom:10px; }
+.skeleton-line--sub{ width:80%; height:11px; margin-bottom:14px; }
+.skeleton-bar{ width:100%; height:8px; border-radius:999px; }
+@keyframes skeletonShimmer{
+  0%{ background-position: 100% 0; }
+  100%{ background-position: -100% 0; }
+}
+
+/* ---------- admin new-order spotlight banner ---------- */
+.admin-alert-banner{
+  position:fixed; left:50%; top:14px; z-index:9999;
+  transform: translate(-50%, -140%);
+  display:flex; align-items:center; gap:12px;
+  width:min(92vw, 420px); padding:14px 14px 14px 16px;
+  background: linear-gradient(180deg,#1A2438,#0F1729);
+  border:1px solid rgba(217, 46, 36,.32);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0,0,0,.45);
+  color:#EDF1F7; font-family:'Outfit',sans-serif;
+  transition: transform .42s cubic-bezier(.2,.9,.28,1.2), opacity .3s ease;
+  opacity:0;
+}
+.admin-alert-banner.is-visible{ transform: translate(-50%, 0); opacity:1; }
+.admin-alert-banner.is-leaving{ transform: translate(-50%, -140%); opacity:0; }
+.admin-alert-banner__ring{
+  position:absolute; inset:-1px; border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(217, 46, 36,.55);
+  animation: adminAlertPulse 1.6s ease-out infinite;
+  pointer-events:none;
+}
+@keyframes adminAlertPulse{
+  0%{ box-shadow: 0 0 0 0 rgba(217, 46, 36,.5); }
+  100%{ box-shadow: 0 0 0 14px rgba(217, 46, 36,0); }
+}
+.admin-alert-banner__icon{
+  flex-shrink:0; width:40px; height:40px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:19px;
+  background: linear-gradient(135deg,#FF6A4D,#D92E24);
+  box-shadow: 0 6px 16px rgba(201,154,58,.35);
+}
+.admin-alert-banner__text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.admin-alert-banner__text strong{ font-size:14px; font-weight:700; }
+.admin-alert-banner__text span{ font-size:12.5px; color:#AEB8C9; }
+.admin-alert-banner__view{
+  flex-shrink:0; border:none; border-radius:999px; padding:8px 14px;
+  background: linear-gradient(180deg,#FF6A4D,#D92E24); color:#FFFFFF;
+  font-weight:700; font-size:12.5px; cursor:pointer;
+}
+.admin-alert-banner__close{
+  flex-shrink:0; width:26px; height:26px; border-radius:50%; border:none;
+  background: rgba(255,255,255,.08); color:#AEB8C9; cursor:pointer; font-size:13px;
+}
