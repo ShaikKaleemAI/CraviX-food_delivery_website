@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>CraviX — Order Online</title>
+<meta name="description" content="CraviX — authentic Dum Biryani, ordered online. Free delivery.">
+
+<!-- PWA / push-notification requirements -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#D92E24">
+<link rel="icon" type="image/png" sizes="192x192" href="images/brand/favicon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="images/brand/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/brand/favicon-16.png">
+<link rel="apple-touch-icon" href="images/brand/favicon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CraviX">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/advance.css">
+</head>
+<body data-theme="light">
+
+<!-- ============ AMBIENT BACKGROUND ============ -->
+<div class="ambient-glow ambient-glow--a"></div>
+<div class="ambient-glow ambient-glow--b"></div>
+
+<!-- ============ TOP HEADER ============ -->
+<header class="topbar" id="topbar">
+  <div class="topbar__inner">
+
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <a href="#home" class="brand" data-nav="home">
+      <span class="brand__crest"><img src="images/brand/favicon-96.png" alt="CraviX" width="34" height="34"></span>
+      <span class="brand__text">
+        <span class="brand__name">Cravi<span>X</span></span>
+        <span class="brand__sub">Order Online</span>
+      </span>
+    </a>
+
+    <div class="topbar__actions">
+      <button class="iconbtn" id="searchToggleBtn" aria-label="Search menu" title="Search">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+
+      <button class="iconbtn" id="themeToggle" aria-label="Toggle theme" title="Toggle light / dark">
+        <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19v2.5M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19 12h2.5M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7" stroke-linecap="round"/></svg>
+        <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z" stroke-linejoin="round"/></svg>
+      </button>
+
+      <button class="iconbtn cartbtn" id="cartBtn" aria-label="Open cart">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.2 12.2a2 2 0 0 0 2 1.6h8.1a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9.5" cy="20.5" r="1.4"/><circle cx="17.5" cy="20.5" r="1.4"/></svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- search panel -->
+  <div class="search-panel" id="searchPanel">
+    <div class="search-panel__inner">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" id="searchInput" placeholder="Search for biryani, fry, curry…" autocomplete="off">
+      <button class="iconbtn" id="searchCloseBtn" aria-label="Close search">✕</button>
+    </div>
+    <div class="search-results" id="searchResults" hidden></div>
+  </div>
+
+  <!-- closing-time strip -->
+  <div class="ordertime-strip" id="orderTimeStrip">
+    <span class="dot"></span>
+    <span id="orderTimeText">Ordering open until 7:15 PM today</span>
+  </div>
+
+  <!-- transient event banner: order placed / status updates while on-site -->
+  <div class="event-banner" id="eventBanner" hidden role="status" aria-live="polite">
+    <span class="event-banner__icon" id="eventBannerIcon">🎉</span>
+    <span class="event-banner__text" id="eventBannerText"></span>
+  </div>
+</header>
+
+<!-- ============ SIDE NAV (tree-line menu) ============ -->
+<div class="navshade" id="navShade"></div>
+<nav class="sidenav" id="sideNav" aria-label="Main menu">
+  <div class="sidenav__head">
+    <span class="brand__crest"><img src="images/brand/favicon-96.png" alt="CraviX" width="34" height="34"></span>
+    <div>
+      <div class="sidenav__title">CraviX</div>
+      <div class="sidenav__subtitle">Order Online</div>
+    </div>
+    <button class="iconbtn sidenav__close" id="sideNavClose" aria-label="Close menu">✕</button>
+  </div>
+
+  <div class="sidenav__user" id="sideNavUser">
+    <div class="avatar">🍽️</div>
+    <div>
+      <div class="sidenav__user-name" id="sideNavUserName">Welcome, Guest</div>
+      <div class="sidenav__user-hint" id="sideNavUserHint">Sign in to track your orders</div>
+    </div>
+  </div>
+
+  <ul class="sidenav__list">
+    <li><a href="#home" data-nav="home"><span class="li-ico">🏠</span>Home &amp; Menu<span class="li-line"></span></a></li>
+    <li><a href="#" id="navAuth"><span class="li-ico">👤</span><span id="navAuthLabel">Log in / Create account</span><span class="li-line"></span></a></li>
+    <li><a href="#orders" data-nav="orders"><span class="li-ico">🧾</span>My Orders<span class="li-line"></span></a></li>
+    <li><a href="#" id="navCart"><span class="li-ico">🛒</span>Cart<span class="li-line"></span></a></li>
+    <li><a href="#" id="navContact"><span class="li-ico">📞</span>Contact Us<span class="li-line"></span></a></li>
+    <li><a href="#" id="navNotifications"><span class="li-ico">🔔</span>Notifications<span class="li-line"></span></a></li>
+    <li class="sidenav__divider"></li>
+    <li><a href="#admin" data-nav="admin"><span class="li-ico">🔐</span>Admin Site<span class="li-line"></span></a></li>
+    <li id="navLogoutItem" hidden><a href="#" id="navLogout"><span class="li-ico">↩</span>Log out<span class="li-line"></span></a></li>
+  </ul>
+
+  <div class="sidenav__foot">
+    <span class="sidenav__foot-line">Crafted for CraviX · Free delivery</span>
+    <button type="button" class="sidenav__credit" id="devCreditBtn">
+      Made with <span class="sidenav__credit-heart" aria-hidden="true">♥</span> by <span class="sidenav__credit-name">Shaik Kaleem</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ============ MAIN ============ -->
+<main id="mainContent">
+
+  <!-- ---------- HOME / MENU VIEW ---------- -->
+  <section class="view" id="view-home" data-view="home">
+
+    <section class="banner-carousel" id="bannerCarousel" aria-label="Featured offers">
+      <div class="banner-track" id="bannerTrack">
+        <div class="banner-slide">
+          <img src="images/banners/banner1.jpg" alt="The Grand Biryani Festival">
+        </div>
+        <div class="banner-slide">
+          <img src="images/banners/banner2.jpg" alt="Order Bucket Biryanis">
+        </div>
+        <div class="banner-slide">
+          <img src="images/banners/banner3.jpg" alt="The Grand Chicken Gravy and Fry Festival">
+        </div>
+      </div>
+      <button class="banner-nav banner-nav--prev" id="bannerPrev" aria-label="Previous banner">‹</button>
+      <button class="banner-nav banner-nav--next" id="bannerNext" aria-label="Next banner">›</button>
+      <div class="banner-dots" id="bannerDots"></div>
+    </section>
+
+    <section class="hero">
+      <div class="hero__ornament hero__ornament--tl">❧</div>
+      <div class="hero__ornament hero__ornament--tr">❧</div>
+      <p class="hero__eyebrow">Slow-cooked Dum Biryani</p>
+      <h1 class="hero__title">Cravi<span class="hero__title-accent">X</span></h1>
+      <p class="hero__sub">Order Online · Free Delivery</p>
+      <div class="hero__cta-row">
+        <a href="#menu" class="btn btn--primary" id="heroOrderBtn">Order Now</a>
+      </div>
+      <a class="hero__whatsapp" id="heroWhatsapp" href="#" target="_blank" rel="noopener">
+        <span>For more information, join our</span>
+        <span class="hero__whatsapp-link">
+          <svg viewBox="0 0 32 32" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path d="M16.02 3C9.4 3 4 8.36 4 15c0 2.34.65 4.53 1.78 6.4L3 29l7.8-2.72A12.9 12.9 0 0 0 16.02 27C22.64 27 28 21.64 28 15S22.64 3 16.02 3Zm0 22.1c-1.98 0-3.83-.55-5.4-1.5l-.39-.23-4.63 1.62 1.55-4.5-.25-.4A9.98 9.98 0 0 1 5.98 15c0-5.53 4.5-10.02 10.04-10.02S26.06 9.47 26.06 15 21.56 25.1 16.02 25.1Zm5.5-7.47c-.3-.15-1.78-.88-2.05-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.96 1.18-.18.2-.35.22-.65.08-.3-.15-1.28-.47-2.43-1.5-.9-.8-1.5-1.79-1.68-2.09-.18-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.68-1.65-.94-2.25-.25-.6-.5-.5-.68-.51h-.58c-.2 0-.53.08-.8.38-.28.3-1.05 1.02-1.05 2.5s1.08 2.9 1.23 3.1c.15.2 2.13 3.25 5.16 4.56.72.31 1.28.5 1.72.63.72.23 1.38.2 1.9.12.58-.09 1.78-.73 2.03-1.43.25-.7.25-1.3.18-1.43-.07-.13-.27-.2-.57-.35Z"/>
+          </svg>
+          WhatsApp group
+        </span>
+      </a>
+    </section>
+
+    <section class="menu" id="menu">
+      <div class="menu__head">
+        <h2>The Menu</h2>
+        <p>Every dish, hand-portioned and dum-sealed. Tap <strong>Add</strong> to build your order.</p>
+      </div>
+
+      <div class="menu-catnav" id="menuCatNav"></div>
+      <div class="menu__list" id="menuList"><!-- populated by JS --></div>
+    </section>
+
+    <section class="trust">
+      <div class="trust__item"><span>🛵</span><div><strong>Free Delivery</strong><small>On every order, no minimum</small></div></div>
+      <div class="trust__item"><span>⏱</span><div><strong>Order Cut-off</strong><small id="trustCutoff">7:15 PM daily</small></div></div>
+      <div class="trust__item"><span>🕗</span><div><strong>Delivery Window</strong><small id="trustDelivery">8:30 – 8:45 PM</small></div></div>
+      <div class="trust__item"><span>🔥</span><div><strong>Fresh Dum</strong><small>Sealed &amp; served hot</small></div></div>
+    </section>
+
+    <section class="home-footer" id="homeFooter">
+      <div class="home-footer__card">
+        <div class="home-footer__ico">🕗</div>
+        <div class="home-footer__body">
+          <strong>Today's delivery time</strong>
+          <span id="homeFooterDelivery">8:30 PM – 8:45 PM</span>
+          <small>Counted from when you place your order</small>
+        </div>
+      </div>
+      <a class="home-footer__whatsapp" id="homeFooterWhatsapp" href="#" target="_blank" rel="noopener">
+        <span class="home-footer__whatsapp-ico">
+          <svg viewBox="0 0 32 32" width="22" height="22" fill="currentColor"><path d="M16.02 3C9.4 3 4 8.38 4 15c0 2.32.64 4.5 1.76 6.36L4 29l7.86-1.7A11.9 11.9 0 0 0 16.02 27C22.63 27 28 21.62 28 15S22.63 3 16.02 3Zm0 21.6c-2.02 0-3.9-.58-5.5-1.58l-.4-.24-4.66 1 1.02-4.53-.26-.42A9.55 9.55 0 0 1 6.4 15c0-5.3 4.32-9.6 9.62-9.6 5.3 0 9.6 4.3 9.6 9.6s-4.3 9.6-9.6 9.6Zm5.28-7.18c-.29-.14-1.7-.84-1.96-.93-.26-.1-.46-.14-.65.14-.2.29-.75.93-.92 1.12-.17.2-.34.22-.63.08-.29-.15-1.22-.45-2.33-1.44-.86-.77-1.44-1.72-1.61-2-.17-.29-.02-.45.13-.6.13-.13.29-.34.44-.51.15-.17.2-.29.29-.48.1-.2.05-.37-.02-.51-.08-.15-.66-1.58-.9-2.16-.24-.57-.48-.5-.66-.5h-.56c-.2 0-.51.07-.78.36-.26.29-1.02 1-1.02 2.43 0 1.44 1.05 2.83 1.2 3.02.14.2 2.06 3.15 5 4.41.7.3 1.24.48 1.67.62.7.22 1.34.19 1.84.12.56-.09 1.7-.7 1.94-1.36.24-.67.24-1.25.17-1.37-.07-.12-.26-.2-.55-.34Z"/></svg>
+        </span>
+        <span class="home-footer__whatsapp-text">
+          <strong>Join our WhatsApp group</strong>
+          <small>Also, for more information join our WhatsApp group</small>
+        </span>
+        <span class="home-footer__whatsapp-arrow">›</span>
+      </a>
+
+      <footer class="site-footer" id="siteFooter">
+        <div class="site-footer__top">
+          <div class="site-footer__col site-footer__col--brand">
+            <div class="brand-strip__mark">
+              <img src="images/brand/favicon-96.png" alt="CraviX" width="26" height="26" style="border-radius:7px;">
+              <span class="brand-strip__name">Cravi<span style="color:var(--gold)">X</span></span>
+            </div>
+            <p class="brand-strip__tagline">Authentic Hyderabadi dum biryani, cooked fresh and sealed for every order.</p>
+            <div class="brand-strip__badges">
+              <span>🔥 Fresh Dum Daily</span>
+              <span>🛵 Free Delivery</span>
+              <span>⏱ On-time Windows</span>
+            </div>
+          </div>
+
+          <div class="site-footer__col">
+            <h4 class="site-footer__heading">Explore</h4>
+            <a href="#home" data-nav="home">Home &amp; Menu</a>
+            <a href="#orders" data-nav="orders">My Orders</a>
+            <a href="#" id="footerNavCart">Cart</a>
+          </div>
+
+          <div class="site-footer__col">
+            <h4 class="site-footer__heading">Get in touch</h4>
+            <a href="#" id="footerNavContact">Contact Us</a>
+            <a href="#" id="footerNavWhatsapp" target="_blank" rel="noopener">WhatsApp Group</a>
+          </div>
+
+          <div class="site-footer__col">
+            <h4 class="site-footer__heading">Service</h4>
+            <span class="site-footer__static">Cut-off <b id="footerCutoff">7:15 PM</b> daily</span>
+            <span class="site-footer__static">Delivery <b id="footerDelivery">8:30 – 8:45 PM</b></span>
+            <span class="site-footer__static">Free delivery, no minimum</span>
+          </div>
+        </div>
+
+        <div class="site-footer__divider"></div>
+
+        <div class="site-footer__bottom">
+          <p class="site-footer__copyright">© <span id="footerYear">2026</span> CraviX. All rights reserved.</p>
+          <button type="button" class="site-footer__credit" id="devCreditBtnFooter">
+            Made with <span class="sidenav__credit-heart" aria-hidden="true">♥</span> by <span class="sidenav__credit-name">Shaik Kaleem</span>
+          </button>
+        </div>
+      </footer>
+    </section>
+  </section>
+
+  <!-- ---------- MY ORDERS VIEW ---------- -->
+  <section class="view" id="view-orders" data-view="orders" hidden>
+    <div class="page-head">
+      <h2>My Orders</h2>
+      <p>Everything you've ordered from CraviX, most recent first.</p>
+    </div>
+    <div class="orders-day-toggle" id="myOrdersDayToggle" hidden>
+      <span id="myOrdersDayInfo">Showing today's orders</span>
+      <button type="button" class="link-btn" id="myOrdersDayToggleBtn">Show all orders</button>
+    </div>
+    <div class="orders-filter-tabs" id="myOrdersFilterTabs" hidden>
+      <button type="button" class="orders-filter-tab is-active" data-filter="all">All<span class="orders-filter-tab__count" data-count="all">0</span></button>
+      <button type="button" class="orders-filter-tab" data-filter="active"><span id="myOrdersActiveTabLabel">In Progress</span><span class="orders-filter-tab__count" data-count="active">0</span></button>
+      <button type="button" class="orders-filter-tab" data-filter="cancelled">Cancelled<span class="orders-filter-tab__count" data-count="cancelled">0</span></button>
+    </div>
+    <div id="myOrdersList" class="orders-list"></div>
+  </section>
+
+  <!-- ---------- PROFILE VIEW ---------- -->
+  <section class="view" id="view-profile" data-view="profile" hidden>
+    <div class="page-head">
+      <h2>My Account</h2>
+      <p>Your details on file with CraviX.</p>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-card__avatar-wrap">
+        <div class="profile-card__avatar" id="profileAvatar">🧑</div>
+        <button class="profile-card__avatar-edit" id="profilePhotoBtn" type="button" aria-label="Change photo">📷</button>
+        <input type="file" id="profilePhotoInput" accept="image/*" hidden>
+      </div>
+      <div class="profile-card__field">
+        <span>Name</span>
+        <div class="profile-card__editrow">
+          <input type="text" id="profileNameInput" disabled>
+          <button class="iconbtn" id="profileNameEditBtn" aria-label="Edit name">✎</button>
+        </div>
+      </div>
+      <div class="profile-card__field">
+        <span>Mobile number</span>
+        <div class="profile-card__editrow">
+          <input type="tel" id="profilePhoneInput" inputmode="numeric" maxlength="10" disabled>
+          <button class="iconbtn" id="profilePhoneEditBtn" aria-label="Edit mobile number">✎</button>
+        </div>
+      </div>
+      <div class="profile-card__field">
+        <span>Email address</span>
+        <div class="profile-card__value" id="profileEmailValue">—</div>
+      </div>
+      <div class="profile-card__field">
+        <span>Member since</span>
+        <div class="profile-card__value" id="profileSinceValue">—</div>
+      </div>
+      <button class="btn btn--ghost btn--block" id="profileChangePwBtn" type="button">Change password</button>
+      <button class="btn btn--ghost btn--block" id="profileLogoutBtn">Log out</button>
+    </div>
+  </section>
+
+  <!-- ---------- CHANGE PASSWORD MODAL ---------- -->
+  <div class="modal-shade" id="changePwShade"></div>
+  <div class="modal" id="changePwModal" role="dialog" aria-modal="true">
+    <h3>Change password</h3>
+    <p>Enter your current password and choose a new one.</p>
+    <form id="changePwForm" autocomplete="off">
+      <label class="field">
+        <span>Current password</span>
+        <div class="pwd-field">
+          <input type="password" id="currentPwInput" placeholder="Current password" required>
+          <button type="button" class="pwd-eye" data-target="currentPwInput" aria-label="Show password">👁</button>
+        </div>
+      </label>
+      <label class="field">
+        <span>New password</span>
+        <div class="pwd-field">
+          <input type="password" id="newPwInput" placeholder="New password" required minlength="6">
+          <button type="button" class="pwd-eye" data-target="newPwInput" aria-label="Show password">👁</button>
+        </div>
+      </label>
+      <label class="field">
+        <span>Confirm new password</span>
+        <div class="pwd-field">
+          <input type="password" id="confirmPwInput" placeholder="Confirm new password" required minlength="6">
+          <button type="button" class="pwd-eye" data-target="confirmPwInput" aria-label="Show password">👁</button>
+        </div>
+      </label>
+      <p class="field-error" id="changePwError" hidden></p>
+      <button type="submit" class="btn btn--primary btn--block" id="confirmChangePwBtn">Update password</button>
+      <button type="button" class="btn btn--ghost btn--block" id="cancelChangePwBtn">Cancel</button>
+    </form>
+  </div>
+
+  <!-- ---------- ADMIN GATE / DASHBOARD ---------- -->
+  <section class="view" id="view-admin" data-view="admin" hidden>
+
+    <div class="admin-gate" id="adminGate">
+      <div class="admin-gate__card">
+        <div class="admin-gate__ico">🔐</div>
+        <h2>Admin Access</h2>
+        <p>This area is restricted to the restaurant owner.</p>
+        <form id="adminGateForm" autocomplete="off">
+          <label class="field">
+            <span>Admin password</span>
+            <div class="pwd-field">
+              <input type="password" id="adminPassword" placeholder="Enter password" required>
+              <button type="button" class="pwd-eye" data-target="adminPassword" aria-label="Show password">👁</button>
+            </div>
+          </label>
+          <button class="btn btn--primary btn--block" type="submit">Unlock Admin</button>
+          <p class="field-error" id="adminGateError" hidden>Incorrect password. Try again.</p>
+        </form>
+      </div>
+    </div>
+
+    <div class="admin-dash" id="adminDash" hidden>
+      <div class="page-head page-head--row">
+        <div>
+          <h2>Admin Dashboard</h2>
+          <p>Manage orders, verify deliveries, and control the ordering window.</p>
+        </div>
+        <div class="page-head__actions">
+          <button type="button" class="btn btn--primary btn--compact admin-deliver-btn" id="adminDeliverArrivedBtn">
+            <span class="admin-deliver-btn__ico">🔔</span>
+            <span id="adminDeliverArrivedLabel">Notify order arrived</span>
+          </button>
+          <button class="btn btn--ghost" id="adminLogoutBtn">Lock admin</button>
+        </div>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab is-active" data-tab="allorders"><span class="admin-tab__ico">🧾</span>All Orders</button>
+        <button class="admin-tab" data-tab="verify"><span class="admin-tab__ico">✅</span>Verify Orders</button>
+        <button class="admin-tab" data-tab="menu"><span class="admin-tab__ico">🍽️</span>Menu</button>
+        <button class="admin-tab" data-tab="admins"><span class="admin-tab__ico">🛡️</span>Admins</button>
+        <button class="admin-tab" data-tab="customers"><span class="admin-tab__ico">👥</span>Customers</button>
+        <button class="admin-tab" data-tab="settings"><span class="admin-tab__ico">⚙️</span>Settings</button>
+        <button class="admin-tab admin-tab--danger" id="clearOrdersTabBtn" type="button"><span class="admin-tab__ico">🗑️</span>Clear Orders</button>
+        <button class="admin-tab" id="restoreOrdersTabBtn" type="button" hidden><span class="admin-tab__ico">↩️</span>Restore Cleared</button>
+      </div>
+      <div class="admin-tabs-divider" aria-hidden="true"></div>
+
+      <!-- ALL ORDERS -->
+      <div class="admin-panel is-active" id="panel-allorders">
+        <button type="button" class="btn btn--primary btn--block admin-new-order-btn" id="adminNewOrderBtn">
+          <span class="admin-new-order-btn__ico">＋</span> New order
+        </button>
+        <div class="pool-banner" id="poolBanner" hidden>
+          <div class="pool-banner__text">
+            <strong id="poolBannerAmount">₹0 of ₹600</strong>
+            <span id="poolBannerStatus">reached today — orders confirm once the pool hits the minimum</span>
+          </div>
+          <div class="pool-banner__track"><div class="pool-banner__fill" id="poolBannerFill"></div></div>
+        </div>
+        <div class="admin-stats-row">
+          <div class="admin-stat"><strong id="statOrderCount">0</strong><span>Active orders</span></div>
+          <div class="admin-stat"><strong id="statTotalAmount">₹0</strong><span>Total value</span></div>
+          <div class="admin-stat admin-stat--danger"><strong id="statCancelledCount">0</strong><span>Cancelled</span></div>
+        </div>
+        <div class="filter-chips-row">
+          <div class="filter-chips" id="orderStatusChips">
+            <button type="button" class="filter-chip is-active" data-status="confirmed">Confirmed</button>
+            <button type="button" class="filter-chip" data-status="delivered">Delivered</button>
+            <button type="button" class="filter-chip" data-status="cancelled">Cancelled</button>
+          </div>
+        </div>
+        <div id="adminOrderProgressWrap"></div>
+        <div class="search-field" id="ordersSearchWrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="text" id="ordersSearchInput" placeholder="Search by name, phone, or order ID…">
+          <button type="button" class="search-field__clear" id="clearOrdersSearchBtn" aria-label="Clear search" hidden>✕</button>
+        </div>
+        <div class="copy-buttons-row">
+          <button class="btn btn--primary copy-btn" id="copyOrdersBtn">
+            <svg class="icon copy-btn__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span id="copyOrdersBtnLabel">Confirmed order list</span>
+          </button>
+          <button class="btn btn--ghost copy-btn" id="copyOrderIdsBtn">
+            <svg class="icon copy-btn__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span id="copyOrderIdsBtnLabel">Confirmed order IDs</span>
+          </button>
+        </div>
+        <p class="admin-panel__hint" id="ordersPanelHint">Copying uses only the orders in the tab you're viewing (Confirmed / Delivered / Cancelled).</p>
+        <div id="allOrdersList" class="orders-list orders-list--admin"></div>
+      </div>
+
+      <!-- VERIFY ORDERS -->
+      <div class="admin-panel" id="panel-verify">
+        <div class="admin-panel__toolbar">
+          <div class="field field--inline">
+            <span>Date</span>
+            <input type="date" id="verifyDateInput">
+          </div>
+        </div>
+        <div class="search-field">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="text" id="verifySearchInput" placeholder="Search by name, phone, or order ID…">
+        </div>
+        <div id="verifyOrdersList" class="verify-list"></div>
+      </div>
+
+      <!-- MENU MANAGEMENT -->
+      <div class="admin-panel" id="panel-menu">
+        <div class="admin-panel__toolbar">
+          <button class="btn btn--primary" id="addItemBtn">+ Add new item</button>
+          <button class="btn btn--ghost" id="restoreMenuBtn">Restore original menu</button>
+        </div>
+        <div id="menuManageList" class="menu-manage-list"></div>
+      </div>
+
+      <!-- ADMINS -->
+      <div class="admin-panel" id="panel-admins">
+        <p class="admin-panel__hint">Everyone who has unlocked admin with the shared password shows up here. Block an account to stop it unlocking admin again — you can't block yourself.</p>
+        <div id="adminsList" class="admins-list"></div>
+      </div>
+
+      <!-- CUSTOMERS -->
+      <div class="admin-panel" id="panel-customers">
+        <div class="admin-stats-row">
+          <div class="admin-stat"><strong id="statCustomersRegistered">0</strong><span>Registered users</span></div>
+          <div class="admin-stat"><strong id="statCustomersOrdered">0</strong><span>Have ordered ≥1 time</span></div>
+        </div>
+        <div class="search-field">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="text" id="customersSearchInput" placeholder="Search by name, email, or mobile…">
+          <button type="button" class="search-field__clear" id="clearCustomersSearchBtn" aria-label="Clear search" hidden>✕</button>
+        </div>
+        <div class="filter-chips-row">
+          <div class="filter-chips" id="customersSortChips">
+            <button type="button" class="filter-chip is-active" data-sort="recent">Recent</button>
+            <button type="button" class="filter-chip" data-sort="orders">Most orders</button>
+            <button type="button" class="filter-chip" data-sort="spent">Highest spent</button>
+          </div>
+        </div>
+        <p class="admin-panel__hint" id="customersMatchHint"></p>
+        <div id="customersList" class="customers-list"></div>
+      </div>
+
+      <!-- ITEM EDITOR (add / edit) -->
+      <div class="admin-panel" id="panel-itemform" hidden>
+        <div class="settings-card">
+          <h3 id="itemFormTitle">Add new item</h3>
+          <form id="itemForm">
+            <label class="field">
+              <span>Item name</span>
+              <input type="text" id="itemNameInput" required placeholder="e.g. Mutton Biryani">
+            </label>
+            <label class="field">
+              <span>Price (₹)</span>
+              <input type="number" id="itemPriceInput" required min="1" placeholder="e.g. 250">
+            </label>
+            <label class="field">
+              <span>Category</span>
+              <input type="text" id="itemCategoryInput" list="categoryOptions" required placeholder="e.g. Biryani">
+              <datalist id="categoryOptions">
+                <option value="Buckets"></option>
+                <option value="Biryani"></option>
+                <option value="Fry"></option>
+                <option value="Curry"></option>
+              </datalist>
+            </label>
+            <label class="field">
+              <span>Note (optional, e.g. portion size)</span>
+              <input type="text" id="itemNoteInput" placeholder="e.g. 200–250gm">
+            </label>
+            <label class="field">
+              <span>Description (optional)</span>
+              <textarea id="itemDescInput" rows="2" placeholder="A short, appetising description shown in the item's detail view"></textarea>
+            </label>
+            <label class="field">
+              <span>Icon</span>
+              <div class="icon-choice-row" id="iconChoiceRow"></div>
+            </label>
+            <label class="field">
+              <span>Photo (optional — shown instead of the icon if added)</span>
+              <div class="photo-upload-row">
+                <div class="photo-upload-preview" id="itemPhotoPreview">No photo</div>
+                <div class="photo-upload-actions">
+                  <label class="btn btn--ghost photo-upload-btn">
+                    Choose photo
+                    <input type="file" id="itemPhotoInput" accept="image/*" hidden>
+                  </label>
+                  <button type="button" class="btn btn--ghost" id="removeItemPhotoBtn">Remove</button>
+                </div>
+              </div>
+            </label>
+            <div class="settings-row">
+              <button class="btn btn--primary" type="submit">Save item</button>
+              <button class="btn btn--ghost" type="button" id="cancelItemFormBtn">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- SETTINGS (list-first, tap to expand — like a modern app settings menu) -->
+      <div class="admin-panel" id="panel-settings">
+
+        <div class="settings-list" id="settingsList">
+          <button type="button" class="settings-list__item" id="settingsPushAlertsBtn">
+            <span class="settings-list__ico">🔔</span>
+            <span class="settings-list__body"><strong>New-Order Alerts on This Device</strong><small id="settingsSummaryPushAlerts">Checking…</small></span>
+            <span class="settings-list__chev">›</span>
+          </button>
+          <button type="button" class="settings-list__item" data-setting="closing">
+            <span class="settings-list__ico">⏱</span>
+            <span class="settings-list__body"><strong>Order Closing Time</strong><small id="settingsSummaryClosing">7:15 PM</small></span>
+            <span class="settings-list__chev">›</span>
+          </button>
+          <button type="button" class="settings-list__item" data-setting="grace">
+            <span class="settings-list__ico">⏳</span>
+            <span class="settings-list__body"><strong>Extra Time After Closing</strong><small id="settingsSummaryGrace">3 minutes</small></span>
+            <span class="settings-list__chev">›</span>
+          </button>
+          <button type="button" class="settings-list__item" data-setting="delivery">
+            <span class="settings-list__ico">🕗</span>
+            <span class="settings-list__body"><strong>Delivery Time Window</strong><small id="settingsSummaryDelivery">8:30 – 8:45 PM</small></span>
+            <span class="settings-list__chev">›</span>
+          </button>
+          <button type="button" class="settings-list__item" data-setting="contacts">
+            <span class="settings-list__ico">📞</span>
+            <span class="settings-list__body"><strong>Contact Numbers</strong><small id="settingsSummaryContacts">1 contact</small></span>
+            <span class="settings-list__chev">›</span>
+          </button>
+          <button type="button" class="settings-list__item" data-setting="whatsapp">
+            <span class="settings-list__ico">💬</span>
+            <span class="settings-list__body"><strong>WhatsApp Group Link</strong><small id="settingsSummaryWhatsapp">Not set</small></span>
+            <span class="settings-list__chev">›</span>
+          </button>
+          <button type="button" class="settings-list__item" data-setting="pool">
+            <span class="settings-list__ico">🎯</span>
+            <span class="settings-list__body"><strong>Minimum Order Pool</strong><small id="settingsSummaryPool">₹600</small></span>
+            <span class="settings-list__chev">›</span>
+          </button>
+          <button type="button" class="settings-list__item" data-setting="cancelwindow">
+            <span class="settings-list__ico">⏱️</span>
+            <span class="settings-list__body"><strong>Cancellation Window</strong><small id="settingsSummaryCancelWindow">15 minutes</small></span>
+            <span class="settings-list__chev">›</span>
+          </button>
+          <button type="button" class="settings-list__item" data-setting="centralpassword">
+            <span class="settings-list__ico">👑</span>
+            <span class="settings-list__body"><strong>Change Central Password</strong><small>Never asked again on this device</small></span>
+            <span class="settings-list__chev">›</span>
+          </button>
+          <button type="button" class="settings-list__item" data-setting="localpassword">
+            <span class="settings-list__ico">🔒</span>
+            <span class="settings-list__body"><strong>Change Local Admin Password</strong><small>Expires after each session</small></span>
+            <span class="settings-list__chev">›</span>
+          </button>
+        </div>
+
+        <div class="settings-detail" id="settingsDetail" hidden>
+          <button type="button" class="settings-detail__back" id="settingsBackBtn">‹ Settings</button>
+
+          <div class="settings-subpanel" data-panel="closing">
+            <div class="settings-card">
+              <h3>Order closing time</h3>
+              <p>Customers can only place orders up to this time each day. After it passes (plus any extra time you allow below), ordering is disabled until the next day.</p>
+              <div class="settings-row">
+                <label class="field">
+                  <span>Closing time (today &amp; onward)</span>
+                  <input type="time" id="closingTimeInput">
+                </label>
+                <button class="btn btn--primary" id="saveClosingTimeBtn">Save</button>
+              </div>
+              <div class="settings-row">
+                <button class="btn btn--ghost" id="resetClosingTimeBtn">Reset to default (7:15 PM)</button>
+              </div>
+              <p class="settings-current">Current setting: <strong id="currentClosingLabel">7:15 PM</strong></p>
+            </div>
+          </div>
+
+          <div class="settings-subpanel" data-panel="grace">
+            <div class="settings-card">
+              <h3>Extra time after closing</h3>
+              <p>A short grace window that still lets customers place an order right after the official closing time. Orders — and cancellations — are blocked once this window ends.</p>
+              <div class="settings-row">
+                <label class="field">
+                  <span>Extra minutes</span>
+                  <input type="number" id="graceMinutesInput" min="0" max="60" step="1">
+                </label>
+                <button class="btn btn--primary" id="saveGraceBtn">Save</button>
+              </div>
+              <p class="settings-current">Current setting: <strong id="currentGraceLabel">3 minutes</strong></p>
+            </div>
+          </div>
+
+          <div class="settings-subpanel" data-panel="delivery">
+            <div class="settings-card">
+              <h3>Delivery time window</h3>
+              <p>Shown to customers when they check out, and at the bottom of the home page.</p>
+              <div class="settings-row">
+                <label class="field"><span>From</span><input type="time" id="deliveryStartInput"></label>
+                <label class="field"><span>To</span><input type="time" id="deliveryEndInput"></label>
+              </div>
+              <div class="settings-row">
+                <button class="btn btn--primary" id="saveDeliveryBtn">Save</button>
+              </div>
+              <p class="settings-current">Current setting: <strong id="currentDeliveryLabel">8:30 PM – 8:45 PM</strong></p>
+            </div>
+          </div>
+
+          <div class="settings-subpanel" data-panel="contacts">
+            <div class="settings-card">
+              <h3>Contact numbers</h3>
+              <p>Shown to customers under Contact Us in the menu. Add as many as you like.</p>
+              <div id="adminContactsList" class="admin-contacts-list"></div>
+              <button class="btn btn--ghost" type="button" id="addContactBtn">+ Add contact</button>
+            </div>
+            <div class="settings-card" id="contactFormCard" hidden>
+              <h3 id="contactFormTitle">Add contact</h3>
+              <form id="contactForm">
+                <label class="field">
+                  <span>Name</span>
+                  <input type="text" id="contactNameInput" required placeholder="e.g. Shareef">
+                </label>
+                <label class="field">
+                  <span>Phone number</span>
+                  <input type="tel" id="contactPhoneInput" required placeholder="e.g. +91 63009 47969">
+                </label>
+                <label class="field">
+                  <span>Details (optional)</span>
+                  <input type="text" id="contactDetailsInput" placeholder="e.g. Orders &amp; delivery">
+                </label>
+                <div class="settings-row">
+                  <button class="btn btn--primary" type="submit">Save contact</button>
+                  <button class="btn btn--ghost" type="button" id="cancelContactFormBtn">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="settings-subpanel" data-panel="whatsapp">
+            <div class="settings-card">
+              <h3>WhatsApp group link</h3>
+              <p>Customers can tap to join your WhatsApp group from Contact Us and the home page footer.</p>
+              <label class="field">
+                <span>Group invite link</span>
+                <input type="url" id="whatsappLinkInput" placeholder="https://chat.whatsapp.com/…">
+              </label>
+              <div class="settings-row">
+                <button class="btn btn--primary" id="saveWhatsappBtn">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-subpanel" data-panel="pool">
+            <div class="settings-card">
+              <h3>Minimum order pool</h3>
+              <p>Each day, orders are held as "Pending" until the combined value of everyone's orders reaches this amount. The order that crosses the line confirms itself and every pending order from that day, all at once — so the kitchen only starts once there's a worthwhile batch.</p>
+              <div class="settings-row">
+                <label class="field">
+                  <span>Minimum total (₹)</span>
+                  <input type="number" id="poolAmountInput" min="0" step="10">
+                </label>
+                <button class="btn btn--primary" id="savePoolAmountBtn">Save</button>
+              </div>
+              <p class="settings-current">Current setting: <strong id="currentPoolLabel">₹600</strong></p>
+            </div>
+          </div>
+
+          <div class="settings-subpanel" data-panel="cancelwindow">
+            <div class="settings-card">
+              <h3>Cancellation window</h3>
+              <p>Choose how customers' cancellation deadline is decided for the day. Only one method applies at a time.</p>
+              <div class="filter-chips" id="cancelModeChips">
+                <button type="button" class="filter-chip is-active" data-mode="afterClosing">After closing time</button>
+                <button type="button" class="filter-chip" data-mode="timeRange">Fixed time range</button>
+              </div>
+
+              <div class="cancel-mode-panel" data-mode-panel="afterClosing">
+                <p>How many extra minutes customers can still cancel an order for, counted from the moment ordering fully closes for the day (Order Closing Time + Extra Time After Closing). This is the same deadline for every order that day — not measured from when each person individually placed theirs.</p>
+                <p class="settings-current">Example: closing 7:30 PM + 3 min extra time + a 10 min cancellation window here = customers can cancel any of today's orders up until <strong>7:43 PM</strong>.</p>
+                <div class="settings-row">
+                  <label class="field">
+                    <span>Minutes after closing (+ extra time)</span>
+                    <input type="number" id="cancelWindowInput" min="0" max="1440" step="1" inputmode="numeric" pattern="[0-9]*">
+                  </label>
+                </div>
+              </div>
+
+              <div class="cancel-mode-panel" data-mode-panel="timeRange">
+                <p>Customers can only cancel an order while the clock is inside this daily window — regardless of when their order was placed or when the kitchen closes. Before it opens or after it closes, cancellation isn't allowed.</p>
+                <div class="settings-row">
+                  <label class="field"><span>Cancellation opens</span><input type="time" id="cancelRangeStartInput"></label>
+                  <label class="field"><span>Cancellation closes</span><input type="time" id="cancelRangeEndInput"></label>
+                </div>
+              </div>
+
+              <div class="settings-row">
+                <button class="btn btn--primary" id="saveCancelWindowBtn">Save</button>
+              </div>
+              <p class="settings-current">Current setting: <strong id="currentCancelWindowLabel">15 minutes</strong></p>
+            </div>
+          </div>
+
+          <div class="settings-subpanel" data-panel="centralpassword">
+            <div class="settings-card">
+              <h3>👑 Change central password</h3>
+              <p>The central password never has to be re-entered on a device that's used it once — perfect for the owner's own phone. Changing it doesn't affect the local admin password below.</p>
+              <form id="changeCentralPasswordForm" autocomplete="off">
+                <label class="field">
+                  <span>Current central password</span>
+                  <div class="pwd-field">
+                    <input type="password" id="currentCentralPasswordInput" required>
+                    <button type="button" class="pwd-eye" data-target="currentCentralPasswordInput" aria-label="Show password">👁</button>
+                  </div>
+                </label>
+                <label class="field">
+                  <span>New central password</span>
+                  <div class="pwd-field">
+                    <input type="password" id="newCentralPasswordInput" required minlength="8">
+                    <button type="button" class="pwd-eye" data-target="newCentralPasswordInput" aria-label="Show password">👁</button>
+                  </div>
+                </label>
+                <div class="pwd-strength" id="centralPwdStrength" hidden>
+                  <div class="pwd-strength__track"><div class="pwd-strength__fill" id="centralPwdStrengthFill"></div></div>
+                  <span class="pwd-strength__label" id="centralPwdStrengthLabel"></span>
+                </div>
+                <label class="field">
+                  <span>Confirm new central password</span>
+                  <div class="pwd-field">
+                    <input type="password" id="confirmCentralPasswordInput" required minlength="8">
+                    <button type="button" class="pwd-eye" data-target="confirmCentralPasswordInput" aria-label="Show password">👁</button>
+                  </div>
+                </label>
+                <button class="btn btn--primary btn--block" type="submit">Update central password</button>
+                <p class="field-error" id="changeCentralPasswordError" hidden></p>
+                <p class="field-success" id="changeCentralPasswordSuccess" hidden>Central password updated.</p>
+              </form>
+            </div>
+          </div>
+
+          <div class="settings-subpanel" data-panel="localpassword">
+            <div class="settings-card">
+              <h3>🔒 Change local admin password</h3>
+              <p>The local admin password behaves like a normal login — anyone using it needs to re-enter it once their session times out.</p>
+              <form id="changeLocalPasswordForm" autocomplete="off">
+                <label class="field">
+                  <span>Current local password</span>
+                  <div class="pwd-field">
+                    <input type="password" id="currentLocalPasswordInput" required>
+                    <button type="button" class="pwd-eye" data-target="currentLocalPasswordInput" aria-label="Show password">👁</button>
+                  </div>
+                </label>
+                <label class="field">
+                  <span>New local password</span>
+                  <div class="pwd-field">
+                    <input type="password" id="newLocalPasswordInput" required minlength="8">
+                    <button type="button" class="pwd-eye" data-target="newLocalPasswordInput" aria-label="Show password">👁</button>
+                  </div>
+                </label>
+                <div class="pwd-strength" id="localPwdStrength" hidden>
+                  <div class="pwd-strength__track"><div class="pwd-strength__fill" id="localPwdStrengthFill"></div></div>
+                  <span class="pwd-strength__label" id="localPwdStrengthLabel"></span>
+                </div>
+                <label class="field">
+                  <span>Confirm new local password</span>
+                  <div class="pwd-field">
+                    <input type="password" id="confirmLocalPasswordInput" required minlength="8">
+                    <button type="button" class="pwd-eye" data-target="confirmLocalPasswordInput" aria-label="Show password">👁</button>
+                  </div>
+                </label>
+                <button class="btn btn--primary btn--block" type="submit">Update local password</button>
+                <p class="field-error" id="changeLocalPasswordError" hidden></p>
+                <p class="field-success" id="changeLocalPasswordSuccess" hidden>Local admin password updated.</p>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ CART DRAWER ============ -->
+<div class="drawershade" id="drawerShade"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Your cart">
+  <div class="cart-drawer__head">
+    <h3>Your Cart</h3>
+    <button class="iconbtn" id="cartCloseBtn" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-drawer__body" id="cartItems"></div>
+  <div class="cart-drawer__foot">
+    <div class="cart-total-row"><span>Total</span><strong id="cartTotal">₹0</strong></div>
+    <button class="btn btn--primary btn--block" id="checkoutBtn">Place Order</button>
+    <p class="cart-note" id="cartClosedNote" hidden>Ordering is closed for today — the kitchen has stopped taking new orders.</p>
+  </div>
+</aside>
+
+<!-- ============ LOGIN MODAL ============ -->
+<div class="modal-shade" id="loginShade"></div>
+<div class="modal auth-modal" id="loginModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="loginCloseBtn" aria-label="Close">✕</button>
+  <div class="auth-step" id="loginStep">
+    <div class="modal__ico">🔐</div>
+    <h3>Welcome back</h3>
+    <p>Log in to track orders and check out faster.</p>
+    <label class="field">
+      <span>College email</span>
+      <input type="email" id="loginIdentifier" placeholder="yourid@rguktong.ac.in" autocomplete="username">
+    </label>
+    <label class="field">
+      <span>Password</span>
+      <div class="pwd-field">
+        <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password">
+        <button type="button" class="pwd-eye" data-target="loginPassword" aria-label="Show password">👁</button>
+      </div>
+    </label>
+    <p class="field-error" id="loginError" hidden></p>
+    <button class="btn btn--primary btn--block" id="loginSubmitBtn">Log In</button>
+    <button class="linklike" id="openForgotBtn">Forgot password?</button>
+    <div class="auth-switch">
+      <span>New to CraviX?</span>
+      <button class="btn btn--ghost btn--block" id="loginToSignupBtn">Create an account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CREATE ACCOUNT MODAL ============ -->
+<div class="modal-shade" id="signupShade"></div>
+<div class="modal auth-modal" id="signupModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="signupCloseBtn" aria-label="Close">✕</button>
+
+  <div class="auth-step" id="signupStepDetails">
+    <div class="modal__ico">✨</div>
+    <h3>Create your account</h3>
+    <p>Just a few details — takes less than a minute.</p>
+    <label class="field">
+      <span>Username</span>
+      <input type="text" id="signupUsername" placeholder="What should we call you?" autocomplete="name">
+    </label>
+    <label class="field">
+      <span>Mobile number</span>
+      <input type="tel" id="signupMobile" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" autocomplete="tel">
+    </label>
+    <label class="field">
+      <span>College email address</span>
+      <input type="email" id="signupEmail" placeholder="yourid@rguktong.ac.in" autocomplete="email">
+      <p class="field-error" id="signupEmailError" hidden></p>
+    </label>
+    <label class="field">
+      <span>Password</span>
+      <div class="pwd-field">
+        <input type="password" id="signupPassword" placeholder="Create a password" autocomplete="new-password">
+        <button type="button" class="pwd-eye" data-target="signupPassword" aria-label="Show password">👁</button>
+      </div>
+      <div class="pwd-strength">
+        <div class="pwd-strength__track"><div class="pwd-strength__bar" id="signupStrengthBar"></div></div>
+        <span class="pwd-strength__label" id="signupStrengthLabel"></span>
+      </div>
+    </label>
+    <label class="field">
+      <span>Confirm password</span>
+      <div class="pwd-field">
+        <input type="password" id="signupConfirm" placeholder="Re-enter your password" autocomplete="new-password">
+        <button type="button" class="pwd-eye" data-target="signupConfirm" aria-label="Show password">👁</button>
+      </div>
+    </label>
+    <p class="field-error" id="signupError" hidden></p>
+    <button class="btn btn--primary btn--block" id="signupDetailsBtn">Create Account</button>
+    <button class="linklike" id="signupToLoginBtn">Already have an account? Log in</button>
+  </div>
+
+  <div class="auth-step" id="signupStepVerify" hidden>
+    <div class="modal__ico">📧</div>
+    <h3>Verify your email</h3>
+    <p>We sent a 6-digit confirmation code to <strong id="signupEmailEcho"></strong>. <button class="linklike linklike--inline" id="signupEditDetailsBtn">Edit</button></p>
+    <div class="otp-boxes otp-boxes--6" id="signupOtpBoxesWrap">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+    </div>
+    <div class="otp-timer" id="signupOtpTimer">
+      <div class="otp-timer__row"><span class="otp-timer__dot"></span><span id="signupOtpTimerText">Code valid for 1:30</span></div>
+      <div class="otp-timer__track"><div class="otp-timer__bar" id="signupOtpTimerBar"></div></div>
+    </div>
+    <p class="demo-otp-hint" id="signupDemoHint"></p>
+    <button class="btn btn--primary btn--block" id="signupVerifyBtn">Verify &amp; create account</button>
+    <button class="linklike" id="signupResendBtn" hidden>Resend code</button>
+  </div>
+
+  <div class="auth-step" id="signupStepSuccess" hidden>
+    <div class="modal__ico modal__ico--success">✅</div>
+    <h3>Account created successfully!</h3>
+    <p>Welcome to CraviX, <strong id="signupSuccessName"></strong> — you're logged in and ready to order.</p>
+    <button class="btn btn--primary btn--block" id="signupContinueBtn">Continue</button>
+  </div>
+</div>
+
+<!-- ============ FORGOT PASSWORD MODAL ============ -->
+<div class="modal-shade" id="forgotShade"></div>
+<div class="modal auth-modal" id="forgotModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="forgotCloseBtn" aria-label="Close">✕</button>
+
+  <div class="auth-step" id="forgotStepEmail">
+    <div class="modal__ico">🔑</div>
+    <h3>Reset your password</h3>
+    <p>Enter the email on your account and we'll send you a verification code.</p>
+    <label class="field">
+      <span>Email address</span>
+      <input type="email" id="forgotEmail" placeholder="you@example.com" autocomplete="email">
+    </label>
+    <p class="field-error" id="forgotEmailError" hidden></p>
+    <button class="btn btn--primary btn--block" id="forgotSendBtn">Send code</button>
+    <button class="linklike" id="forgotBackToLoginBtn">Back to log in</button>
+  </div>
+
+  <div class="auth-step" id="forgotStepOtp" hidden>
+    <div class="modal__ico">📩</div>
+    <h3>Enter the code</h3>
+    <p>Sent to <strong id="forgotEmailEcho"></strong>. <button class="linklike linklike--inline" id="forgotEditEmailBtn">Edit</button></p>
+    <div class="otp-boxes otp-boxes--6" id="forgotOtpBoxesWrap">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+      <input maxlength="1" inputmode="numeric" class="otp-box">
+    </div>
+    <div class="otp-timer" id="forgotOtpTimer">
+      <div class="otp-timer__row"><span class="otp-timer__dot"></span><span id="forgotOtpTimerText">Code valid for 1:30</span></div>
+      <div class="otp-timer__track"><div class="otp-timer__bar" id="forgotOtpTimerBar"></div></div>
+    </div>
+    <p class="demo-otp-hint" id="forgotDemoHint"></p>
+    <button class="btn btn--primary btn--block" id="forgotVerifyBtn">Verify code</button>
+    <button class="linklike" id="forgotResendBtn" hidden>Resend code</button>
+  </div>
+
+  <div class="auth-step" id="forgotStepNewPass" hidden>
+    <div class="modal__ico">🔒</div>
+    <h3>Set a new password</h3>
+    <p>Choose a new password, or skip and keep your current one.</p>
+    <label class="field">
+      <span>New password</span>
+      <div class="pwd-field">
+        <input type="password" id="forgotNewPass" placeholder="New password" autocomplete="new-password">
+        <button type="button" class="pwd-eye" data-target="forgotNewPass" aria-label="Show password">👁</button>
+      </div>
+      <div class="pwd-strength">
+        <div class="pwd-strength__track"><div class="pwd-strength__bar" id="forgotStrengthBar"></div></div>
+        <span class="pwd-strength__label" id="forgotStrengthLabel"></span>
+      </div>
+    </label>
+    <label class="field">
+      <span>Confirm new password</span>
+      <div class="pwd-field">
+        <input type="password" id="forgotConfirmPass" placeholder="Re-enter new password" autocomplete="new-password">
+        <button type="button" class="pwd-eye" data-target="forgotConfirmPass" aria-label="Show password">👁</button>
+      </div>
+    </label>
+    <p class="field-error" id="forgotPassError" hidden></p>
+    <button class="btn btn--primary btn--block" id="forgotSaveBtn">Save &amp; continue</button>
+    <button class="linklike" id="forgotSkipBtn">Skip for now</button>
+  </div>
+
+  <div class="auth-step" id="forgotStepDone" hidden>
+    <div class="modal__ico modal__ico--success">✅</div>
+    <h3 id="forgotDoneTitle">Password updated</h3>
+    <p id="forgotDoneMessage">Your password has been changed. You can now log in with your new password.</p>
+    <button class="btn btn--primary btn--block" id="forgotDoneBtn">Continue</button>
+  </div>
+</div>
+
+<!-- ============ CHECKOUT CONFIRM MODAL ============ -->
+<div class="modal-shade" id="checkoutShade"></div>
+<div class="modal checkout-modal" id="checkoutModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="checkoutCloseBtn" aria-label="Close">✕</button>
+  <div class="modal__ico">🧾</div>
+  <h3>Confirm your order</h3>
+  <div id="checkoutSummary" class="checkout-summary"></div>
+  <div class="delivery-window-note" id="checkoutDeliveryNote">
+    <span class="delivery-window-note__ico">🕗</span>
+    <span>Expected delivery: <strong id="checkoutDeliveryTime">8:30 PM – 8:45 PM</strong></span>
+  </div>
+  <button class="btn btn--primary btn--block" id="confirmOrderBtn">Confirm &amp; Place Order</button>
+</div>
+
+<!-- ============ EDIT ORDER MODAL ============ -->
+<div class="modal-shade" id="editOrderShade"></div>
+<div class="modal checkout-modal edit-order-modal" id="editOrderModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="editOrderCloseBtn" aria-label="Close">✕</button>
+  <div class="modal__ico">✏️</div>
+  <h3>Edit order <span id="editOrderIdLabel"></span></h3>
+  <p id="editOrderSubtitle">Change quantities or add dishes until the cancellation window closes.</p>
+
+  <div id="editOrderItems" class="edit-order-items"></div>
+
+  <button type="button" class="edit-order-addbtn" id="editOrderAddBtn">
+    <span class="edit-order-addbtn__ico">＋</span> Add a dish
+  </button>
+
+  <button type="button" class="edit-order-contact-toggle" id="editOrderContactToggle">
+    <span class="edit-order-contact-toggle__ico">✎</span>
+    <span>Edit delivery address &amp; contact number</span>
+    <span class="edit-order-contact-toggle__chev">›</span>
+  </button>
+  <div class="edit-order-contact-fields" id="editOrderContactFields" hidden>
+    <label class="field">
+      <span>Delivery address</span>
+      <textarea id="editOrderAddress" rows="2" placeholder="House / flat, street, landmark (optional)"></textarea>
+    </label>
+    <label class="field">
+      <span>Contact number</span>
+      <input type="tel" id="editOrderPhone" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number">
+    </label>
+  </div>
+
+  <div class="checkout-summary edit-order-total">
+    <div class="cs-total"><span>New total</span><span id="editOrderTotal">₹0</span></div>
+  </div>
+  <p class="field-error" id="editOrderError" hidden></p>
+
+  <button class="btn btn--primary btn--block" id="saveEditOrderBtn">Save changes</button>
+</div>
+
+<!-- ============ DISH PICKER MODAL (used by Edit Order + Admin New Order) ============ -->
+<div class="modal-shade" id="dishPickerShade"></div>
+<div class="modal dish-picker-modal" id="dishPickerModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="dishPickerCloseBtn" aria-label="Close">✕</button>
+  <h3>Add dishes</h3>
+  <div class="dish-picker__search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="dishPickerSearchInput" placeholder="Search dishes…">
+  </div>
+  <div class="dish-picker__list" id="dishPickerList"></div>
+  <button class="btn btn--primary btn--block" id="dishPickerDoneBtn">Add selected</button>
+</div>
+
+<!-- ============ EMPTY ORDER (CANCEL?) CONFIRM MODAL ============ -->
+<div class="modal-shade" id="emptyOrderShade"></div>
+<div class="modal confirm-modal" id="emptyOrderModal" role="dialog" aria-modal="true">
+  <div class="modal__ico">🍽️</div>
+  <h3>Cancel this order instead?</h3>
+  <p>You've removed every item. Since there's nothing left to prepare, would you like to cancel this order instead?</p>
+  <div class="settings-row">
+    <button class="btn btn--ghost btn--block" id="emptyOrderKeepBtn">Go back</button>
+    <button class="btn btn--danger btn--block" id="emptyOrderCancelBtn">Yes, cancel order</button>
+  </div>
+</div>
+
+<!-- ============ PROFILE PHOTO CROPPER MODAL ============ -->
+<div class="modal-shade" id="photoCropShade"></div>
+<div class="modal photo-crop-modal" id="photoCropModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="photoCropCloseBtn" aria-label="Close">✕</button>
+  <h3>Adjust your photo</h3>
+  <p>Drag to reposition, use the slider to zoom.</p>
+  <div class="photo-crop__stage" id="photoCropStage">
+    <canvas id="photoCropCanvas"></canvas>
+    <div class="photo-crop__ring"></div>
+  </div>
+  <input type="range" id="photoCropZoom" class="photo-crop__zoom" min="1" max="3" step="0.01" value="1">
+  <button class="btn btn--primary btn--block" id="photoCropSaveBtn">Use this photo</button>
+</div>
+
+
+<!-- ============ ITEM DETAIL MODAL ============ -->
+<div class="modal-shade" id="itemDetailShade"></div>
+<div class="modal item-detail-modal" id="itemDetailModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="itemDetailCloseBtn" aria-label="Close">✕</button>
+  <div class="item-detail__media" id="itemDetailMedia"></div>
+  <div class="item-detail__body">
+    <span class="item-detail__category" id="itemDetailCategory"></span>
+    <h3 id="itemDetailName"></h3>
+    <p class="item-detail__desc" id="itemDetailDesc"></p>
+    <div class="item-detail__row">
+      <span class="item-detail__price" id="itemDetailPrice"></span>
+      <div class="stepper" id="itemDetailStepper">
+        <button class="qty-minus" id="itemDetailMinus" aria-label="Decrease quantity">−</button>
+        <span class="stepper__count" id="itemDetailQty">1</span>
+        <button class="qty-plus" id="itemDetailPlus" aria-label="Increase quantity">+</button>
+      </div>
+    </div>
+    <button class="btn btn--primary btn--block" id="itemDetailAddBtn">Add to Cart</button>
+  </div>
+</div>
+
+<!-- ============ CLEAR ORDERS CONFIRM MODAL ============ -->
+<div class="modal-shade" id="clearOrdersShade"></div>
+<div class="modal confirm-modal" id="clearOrdersModal" role="dialog" aria-modal="true">
+  <div class="modal__ico">🗑️</div>
+  <h3>Clear the dashboard?</h3>
+  <p>This only clears your admin dashboard view — it doesn't delete anyone's order data. Customers still see their full order history in "My Orders". You can restore this view afterward if needed.</p>
+  <div class="settings-row">
+    <button class="btn btn--ghost btn--block" id="cancelClearOrdersBtn">Cancel</button>
+    <button class="btn btn--danger btn--block" id="confirmClearOrdersBtn">Yes, clear dashboard</button>
+  </div>
+</div>
+
+<!-- ============ RESTORE CLEARED ORDERS CONFIRM MODAL ============ -->
+<div class="modal-shade" id="restoreOrdersShade"></div>
+<div class="modal confirm-modal" id="restoreOrdersModal" role="dialog" aria-modal="true">
+  <div class="modal__ico">↩️</div>
+  <h3>Restore the last clear?</h3>
+  <p>Brings back every order hidden by the most recent dashboard clear — manual or automatic. Nothing was ever deleted, so this just makes them visible again.</p>
+  <div class="settings-row">
+    <button class="btn btn--ghost btn--block" id="cancelRestoreOrdersBtn">Cancel</button>
+    <button class="btn btn--primary btn--block" id="confirmRestoreOrdersBtn">Yes, restore</button>
+  </div>
+</div>
+
+<!-- ============ CUSTOMER DETAIL MODAL ============ -->
+<div class="modal-shade" id="customerDetailShade"></div>
+<div class="modal customer-detail-modal" id="customerDetailModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="customerDetailCloseBtn" aria-label="Close">✕</button>
+  <div class="modal__ico">👤</div>
+  <h3 id="customerDetailName">—</h3>
+  <p id="customerDetailContact">—</p>
+  <div class="customer-detail-stats" id="customerDetailStats"></div>
+  <p class="admin-panel__hint" id="customerDetailStatus"></p>
+  <div class="customer-detail-actions" id="customerDetailActions" hidden>
+    <button class="btn btn--ghost btn--compact" id="customerBlockToggleBtn">Block</button>
+    <button class="btn btn--ghost btn--compact" id="customerClearDataBtn">Clear data</button>
+    <button class="btn btn--danger btn--compact" id="customerRemoveBtn">Remove</button>
+  </div>
+</div>
+
+<!-- ============ CUSTOMER ACTION CONFIRM MODAL (block / unblock / remove) ============ -->
+<div class="modal-shade" id="customerActionShade"></div>
+<div class="modal confirm-modal" id="customerActionModal" role="dialog" aria-modal="true">
+  <div class="modal__ico" id="customerActionIco">🚫</div>
+  <h3 id="customerActionTitle">Block this customer?</h3>
+  <p id="customerActionBody"></p>
+  <div class="settings-row">
+    <button class="btn btn--ghost btn--block" id="cancelCustomerActionBtn">Cancel</button>
+    <button class="btn btn--danger btn--block" id="confirmCustomerActionBtn">Confirm</button>
+  </div>
+</div>
+
+<!-- ============ DELIVERY ARRIVED CONFIRM MODAL ============ -->
+<div class="modal-shade" id="deliverArrivedShade"></div>
+<div class="modal confirm-modal" id="deliverArrivedModal" role="dialog" aria-modal="true">
+  <div class="modal__ico" id="deliverArrivedModalIco">🔔</div>
+  <h3 id="deliverArrivedModalTitle">Notify customers their order has arrived?</h3>
+  <p id="deliverArrivedModalBody">Every customer with an order today will see a "🛵 Delivery has arrived" notice, and every confirmed or preparing order today moves straight to Delivered. Use this once the batch has actually reached everyone — you can undo it afterward if you tap it by mistake.</p>
+  <div class="settings-row">
+    <button class="btn btn--ghost btn--block" id="cancelDeliverArrivedBtn">Cancel</button>
+    <button class="btn btn--primary btn--block" id="confirmDeliverArrivedBtn">Yes, mark delivered</button>
+  </div>
+</div>
+
+<!-- ============ LOGOUT CONFIRM MODAL ============ -->
+<div class="modal-shade" id="logoutShade"></div>
+<div class="modal confirm-modal" id="logoutModal" role="dialog" aria-modal="true">
+  <div class="modal__ico">↩</div>
+  <h3>Log out?</h3>
+  <p>You'll need to verify your mobile number again next time.</p>
+  <div class="settings-row">
+    <button class="btn btn--ghost btn--block" id="cancelLogoutBtn">Cancel</button>
+    <button class="btn btn--primary btn--block" id="confirmLogoutBtn">Log out</button>
+  </div>
+</div>
+
+<!-- ============ CONTACT US MODAL ============ -->
+<div class="modal-shade" id="contactShade"></div>
+<div class="modal contact-modal" id="contactModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="contactCloseBtn" aria-label="Close">✕</button>
+  <div class="modal__ico">📞</div>
+  <h3>Contact Us</h3>
+  <p>Reach out directly, or join our WhatsApp group for updates and offers.</p>
+  <div id="contactList" class="contact-list"></div>
+  <a class="btn btn--primary btn--block contact-whatsapp-btn" id="contactWhatsappBtn" href="#" target="_blank" rel="noopener">
+    Join our WhatsApp group
+  </a>
+</div>
+
+<!-- ============ DEVELOPER CREDIT / CONTACT MODAL ============ -->
+<div class="modal-shade" id="devContactShade"></div>
+<div class="modal contact-modal dev-contact-modal" id="devContactModal" role="dialog" aria-modal="true" aria-labelledby="devContactTitle">
+  <button class="iconbtn modal__close" id="devContactCloseBtn" aria-label="Close">✕</button>
+  <div class="modal__ico dev-contact-modal__avatar">👨‍💻</div>
+  <h3 id="devContactTitle">Shaik Kaleem</h3>
+  <p>Designed &amp; built this website. Feel free to reach out for freelance work or feedback.</p>
+  <div class="contact-list">
+    <a class="contact-row" href="mailto:kaleem.shaik.ai@gmail.com">
+      <span class="contact-row__ico">✉️</span>
+      <span class="contact-row__body">
+        <strong>Email</strong>
+        <span>kaleem.shaik.ai@gmail.com</span>
+      </span>
+    </a>
+    <a class="contact-row" href="tel:+918008712120">
+      <span class="contact-row__ico">📞</span>
+      <span class="contact-row__body">
+        <strong>Mobile</strong>
+        <span>+91 80087 12120</span>
+      </span>
+    </a>
+    <a class="contact-row" href="https://instagram.com/shaik_kaleem211" target="_blank" rel="noopener">
+      <span class="contact-row__ico">📷</span>
+      <span class="contact-row__body">
+        <strong>Instagram</strong>
+        <span>@shaik_kaleem211</span>
+      </span>
+    </a>
+  </div>
+  <a class="btn btn--primary btn--block" href="mailto:kaleem.shaik.ai@gmail.com">Say hello</a>
+</div>
+
+<!-- ============ CANCEL ORDER CONFIRM MODAL ============ -->
+<div class="modal-shade" id="cancelOrderShade"></div>
+<div class="modal confirm-modal" id="cancelOrderModal" role="dialog" aria-modal="true">
+  <div class="modal__ico">🚫</div>
+  <h3>Cancel this order?</h3>
+  <p>This can't be undone. The kitchen will be notified not to prepare it.</p>
+  <div class="settings-row">
+    <button class="btn btn--ghost btn--block" id="keepOrderBtn">Keep order</button>
+    <button class="btn btn--danger btn--block" id="confirmCancelOrderBtn">Yes, cancel</button>
+  </div>
+</div>
+
+<!-- ============ CANCELLATION TERMS MODAL ============ -->
+<div class="modal-shade" id="cancelTermsShade"></div>
+<div class="modal confirm-modal status-info-modal" id="cancelTermsModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="cancelTermsCloseBtn" aria-label="Close">✕</button>
+  <div class="modal__ico status-info-modal__ico">📋</div>
+  <h3>Cancellation terms</h3>
+  <div class="cancel-terms__body" id="cancelTermsBody"></div>
+  <button class="btn btn--primary btn--block" id="cancelTermsGotItBtn">Got it</button>
+</div>
+
+<!-- ============ ORDER PLACED MODAL ============ -->
+<div class="modal-shade" id="orderPlacedShade"></div>
+<div class="modal confirm-modal order-placed-modal" id="orderPlacedModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="orderPlacedCloseBtn" aria-label="Close">✕</button>
+  <div class="modal__ico order-placed-modal__ico" id="orderPlacedIcon">🎉</div>
+  <h3 id="orderPlacedTitle">Order confirmed!</h3>
+  <p id="orderPlacedMsg">Track it under My Orders.</p>
+  <div class="order-placed-modal__meta" id="orderPlacedMeta"></div>
+  <div class="settings-row">
+    <button class="btn btn--ghost btn--block" id="continueBrowsingBtn">Keep browsing</button>
+    <button class="btn btn--primary btn--block" id="viewMyOrdersBtn">View My Orders</button>
+  </div>
+</div>
+
+<!-- ============ ORDER STATUS INFO MODAL ============ -->
+<div class="modal-shade" id="statusInfoShade"></div>
+<div class="modal confirm-modal status-info-modal" id="statusInfoModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="statusInfoCloseBtn" aria-label="Close">✕</button>
+  <div class="modal__ico status-info-modal__ico" id="statusInfoIcon">⏳</div>
+  <h3 id="statusInfoTitle">Pending</h3>
+  <p id="statusInfoMsg">Waiting for today's minimum order pool to be reached.</p>
+  <button class="btn btn--primary btn--block" id="statusInfoGotItBtn">Got it</button>
+</div>
+
+<!-- ============ ADMIN: NEW ORDER MODAL ============ -->
+<div class="modal-shade" id="adminNewOrderShade"></div>
+<div class="modal checkout-modal edit-order-modal" id="adminNewOrderModal" role="dialog" aria-modal="true">
+  <button class="iconbtn modal__close" id="adminNewOrderCloseBtn" aria-label="Close">✕</button>
+  <div class="modal__ico">🧾</div>
+  <h3>New order</h3>
+  <p>Create an order on a customer's behalf — phone orders, walk-ins, or fixing a checkout issue.</p>
+
+  <label class="field">
+    <span>Customer name</span>
+    <input type="text" id="adminNewOrderName" placeholder="Customer's name">
+  </label>
+  <label class="field">
+    <span>Mobile number</span>
+    <input type="tel" id="adminNewOrderPhone" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number">
+  </label>
+
+  <div id="adminNewOrderItems" class="edit-order-items"></div>
+
+  <button type="button" class="edit-order-addbtn" id="adminNewOrderAddBtn">
+    <span class="edit-order-addbtn__ico">＋</span> Add a dish
+  </button>
+
+  <label class="field">
+    <span>Delivery address <span class="field__optional">(optional)</span></span>
+    <textarea id="adminNewOrderAddress" rows="2" placeholder="House / flat, street, landmark"></textarea>
+  </label>
+
+  <label class="field field--inline admin-new-order-confirm-toggle">
+    <input type="checkbox" id="adminNewOrderForceConfirm">
+    <span>Confirm immediately (skip today's pool minimum)</span>
+  </label>
+
+  <div class="checkout-summary edit-order-total">
+    <div class="cs-total"><span>Total</span><span id="adminNewOrderTotal">₹0</span></div>
+  </div>
+  <p class="field-error" id="adminNewOrderError" hidden></p>
+
+  <button class="btn btn--primary btn--block" id="adminNewOrderSaveBtn">Create order</button>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast"></div>
+
+<!-- ============ BOTTOM TAB BAR ============ -->
+<nav class="bottomnav" aria-label="Primary">
+  <a href="#home" class="bottomnav__item" data-nav="home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="m15.2 8.8-1.6 4.8-4.8 1.6 1.6-4.8 4.8-1.6Z"/></svg>
+    <span class="bottomnav__label">Discover</span>
+  </a>
+  <a href="#" class="bottomnav__item" id="bottomNavCartBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.2 12.2a2 2 0 0 0 2 1.6h8.1a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9.5" cy="20.5" r="1.4"/><circle cx="17.5" cy="20.5" r="1.4"/></svg>
+    <span class="bottomnav__label">Cart</span>
+    <span class="bottomnav__cart-badge" id="bottomNavCartBadge">0</span>
+  </a>
+  <a href="#orders" class="bottomnav__item" data-nav="orders">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-3.4 7-6.8 7-10.5A7 7 0 0 0 5 10.5C5 14.2 8 17.6 12 21Z"/><circle cx="12" cy="10.3" r="2.3"/></svg>
+    <span class="bottomnav__label">Track order</span>
+  </a>
+  <a href="#profile" class="bottomnav__item" data-nav="profile">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c1.2-3.6 4-5.4 7.2-5.4s6 1.8 7.2 5.4"/></svg>
+    <span class="bottomnav__label">Profile</span>
+  </a>
+</nav>
+
+<script src="js/api.js"></script>
+<script src="js/push.js"></script>
+<script src="js/notify.js"></script>
+<script src="js/advance-ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
